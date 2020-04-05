@@ -33,21 +33,10 @@ namespace s18033_3.Controllers
             return Ok(_dbService.GetStudents());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetStudent(int id)
+        [HttpGet("{indexNumber}")]
+        public IActionResult GetEnrollment(string indexNumber)
         {
-            if (id == 1)
-            {
-                return Ok("Kowalski");
-            } else if (id == 2)
-            {
-                return Ok("Malewski");
-            }
-            else if (id == 3)
-            {
-                return Ok("Andrzejewski");
-            }
-            return NotFound("Nie znaleziono studenta.");
+            return Ok(_dbService.GetEnrollments(indexNumber));
         }
 
         [HttpPost]

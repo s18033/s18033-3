@@ -5,21 +5,26 @@ namespace Cw3.DAL
 {
     public class MockDbService : IDbService
     {
-        private static IEnumerable<Student> _students;
+        private static List<Student> _students;
 
         static MockDbService()
         {
             _students = new List<Student>
             {
-                new Student{IdStudent=1, FirstName="Jan", LastName="Kowalski"},
-                new Student{IdStudent=2, FirstName="Anna", LastName="Malewski"},
-                new Student{IdStudent=3, FirstName="Andrzej", LastName="Andrzejewicz"}
+                new Student{FirstName="Jan", LastName="Kowalski"},
+                new Student{FirstName="Anna", LastName="Malewski"},
+                new Student{FirstName="Andrzej", LastName="Andrzejewicz"}
             };
         }
 
-        public IEnumerable<Student> GetStudents()
+        public List<Student> GetStudents()
         {
             return _students;
+        }
+
+        public List<Enrollment> GetEnrollments(string indexNumber)
+        {
+            return new List<Enrollment>();
         }
     }
 }
