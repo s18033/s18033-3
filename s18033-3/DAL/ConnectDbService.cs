@@ -48,7 +48,8 @@ namespace Cw3.DAL
             {
                 using (SqlCommand command = new SqlCommand())
                 {
-                    command.CommandText = $"SELECT * FROM dbo.Enrollment WHERE IdEnrollment = (SELECT IdEnrollment FROM dbo.Student WHERE Student.IndexNumber = '{indexNumber}');";
+                    command.CommandText = "SELECT * FROM dbo.Enrollment WHERE IdEnrollment = (SELECT IdEnrollment FROM dbo.Student WHERE Student.IndexNumber=@indexNumber);";
+                    command.Parameters.AddWithValue("indexNumber", indexNumber);
                     command.Connection = connection;
 
                     connection.Open();
