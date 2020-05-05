@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using s18033_3.Services;
 
 namespace s18033_3
 {
@@ -25,8 +26,7 @@ namespace s18033_3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDbService, ConnectDbService>();
-            // services.AddSingleton<IDbService, MockDbService>();
+            services.AddTransient<IStudentsDbService, SqlServerStudentsDbService>();
             services.AddControllers();
         }
 
