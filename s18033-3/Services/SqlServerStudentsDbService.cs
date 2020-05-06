@@ -5,6 +5,7 @@ using System;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Cw3.Models;
 
 namespace s18033_3.Services
 {
@@ -103,7 +104,7 @@ namespace s18033_3.Services
                         return Ok(response);
 
                     }
-                    catch (SqlException e)
+                    catch (SqlException)
                     {
                         transaction.Rollback();
                     }
@@ -115,6 +116,82 @@ namespace s18033_3.Services
         public void PromoteStudents(int semester, string studies)
         {
             throw new NotImplementedException();
+        }
+
+        public Boolean IsStudentExists(string indexNumber)
+        {
+            using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+
+                    connection.Open();
+
+                    try
+                    {
+
+                        command.Connection = connection;
+
+                        command.CommandText = "SELECT * FROM dbo.Student WHERE IndexNumber=@IndexNumber";
+                        command.Parameters.AddWithValue("IndexNumber", indexNumber);
+
+                        var dataReader = command.ExecuteReader();
+
+                        if (!dataReader.HasRows)
+                        {
+                            dataReader.Close();
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    catch (SqlException)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public Student GetStudent(string indexNumber)
+        {
+            using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+
+                    connection.Open();
+
+                    try
+                    {
+
+                        command.Connection = connection;
+
+                        command.CommandText = "SELECT FirstName, LastName FROM dbo.Student WHERE IndexNumber=@IndexNumber";
+                        command.Parameters.AddWithValue("IndexNumber", indexNumber);
+
+                        var dataReader = command.ExecuteReader();
+
+                        if (!dataReader.HasRows)
+                        {
+                            dataReader.Close();
+                            return null;
+                        }
+
+                        dataReader.Read();
+
+                        var student = new Student();
+                        student.FirstName = dataReader.GetString(0);
+                        student.LastName = dataReader.GetString(1);
+
+                        return student;
+                    }
+                    catch (SqlException)
+                    {
+                        return null;
+                    }
+                }
+            }
         }
     }
 }

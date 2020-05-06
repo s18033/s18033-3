@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cw3.Models;
+using Microsoft.AspNetCore.Mvc;
 using s18033_3.DTOs.Requests;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,16 @@ namespace s18033_3.Services
         }
 
         public void PromoteStudents(int semester, string studies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Boolean IsStudentExists(string indexNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Student GetStudent(string indexNumber)
         {
             throw new NotImplementedException();
         }

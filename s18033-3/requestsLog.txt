@@ -1,0 +1,27 @@
+﻿===
+/weatherforecast GET
+
+
+===
+===
+/api/students GET
+?index=s18033
+{
+ "Studies": "Informatyka",
+ "IndexNumber": "s1212",
+ "FirstName": "Jan",
+ "LastName": "Kowalski",
+ "Birthdate": "1970-01-01"
+}
+===
+===
+/api/students GET
+?index=s18033
+{
+ "Studies": "Informatyka",
+ "IndexNumber": "s1212",
+ "FirstName": "Jan",
+ "LastName": "Kowalski",
+ "Birthdate": "1970-01-01"
+}
+===
