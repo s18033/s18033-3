@@ -5,6 +5,8 @@ using System;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Cw3.Models;
+using System.Data;
 
 namespace s18033_3.Services
 {
@@ -103,7 +105,7 @@ namespace s18033_3.Services
                         return Ok(response);
 
                     }
-                    catch (SqlException e)
+                    catch (SqlException)
                     {
                         transaction.Rollback();
                     }
@@ -112,9 +114,58 @@ namespace s18033_3.Services
             return BadRequest("Wystapil problem z polaczeniem sie z baza.");
         }
 
-        public void PromoteStudents(int semester, string studies)
+        public IActionResult PromoteStudents(int semester, string studies)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+
+                    connection.Open();
+
+                    try
+                    {
+
+                        command.Connection = connection;
+
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandText = "dbo.PromoteStudent";
+                        command.Parameters.AddWithValue("@Studies", studies);
+                        command.Parameters.AddWithValue("@Semester", semester);
+
+                        // Procedura mimo sprawdzenia w SSMS nie jest w stanie się zawsze zwraca wyjątek (RAISERROR) i trafia do 404 (NotFound niżej). Parametry studies i semester są prawidłowe - sprawdzałem.
+
+                        var dataReader = command.ExecuteReader();
+
+                        var idEnrollmentDb = command.Parameters["@ReturnVal"].Value;
+                        dataReader.Close();
+
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = "SELECT IdEnrollment, StartDate, IdStudy FROM dbo.Enrollment WHERE IdEnrollment=@IdEnrollment";
+                        command.Parameters.AddWithValue("@IdEnrollment", idEnrollmentDb);
+
+                        dataReader = command.ExecuteReader();
+                        dataReader.Read();
+
+                        int idEnrollment = dataReader.GetInt32(dataReader.GetOrdinal("IdEnrollment"));
+                        int idStudy = dataReader.GetInt32(dataReader.GetOrdinal("IdStudy"));
+                        DateTime startDate = dataReader.GetDateTime(dataReader.GetOrdinal("StartDate"));
+
+                        Enrollment response = new Enrollment();
+                        response.IdStudy = idStudy;
+                        response.Semester = semester + 1;
+                        response.IdEnrollment = idEnrollment;
+                        response.StartDate = startDate.ToString();
+
+                        return Ok(response);
+
+                    }
+                    catch (SqlException)
+                    {
+                        return NotFound("Nie znaleziono studiów o zadanej nazwie");
+                    }
+                }
+            }
         }
     }
 }

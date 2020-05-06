@@ -30,5 +30,11 @@ namespace s18033_3.Controllers
         {
             return _service.EnrollStudent(request);
         }
+
+        [HttpPost("promotions/")]
+        public IActionResult PromoteStudent(PromoteStudentRequest request)
+        {
+            return _service.PromoteStudents(request.Semester, request.Studies);
+        }
     }
 }

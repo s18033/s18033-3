@@ -14,7 +14,7 @@ namespace s18033_3.Services
             throw new NotImplementedException();
         }
 
-        public void PromoteStudents(int semester, string studies)
+        public IActionResult PromoteStudents(int semester, string studies)
         {
             throw new NotImplementedException();
         }
