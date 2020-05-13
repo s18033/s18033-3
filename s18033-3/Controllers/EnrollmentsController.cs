@@ -28,13 +28,28 @@ namespace s18033_3.Controllers
         [HttpPost]
         public IActionResult EnrollStudent(EnrollStudentRequest request)
         {
-            return _service.EnrollStudent(request);
+            try
+            {
+                var response = _service.EnrollStudent(request);
+                return Ok(response);
+            } catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("promotions/")]
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
-            return _service.PromoteStudents(request.Semester, request.Studies);
+            try
+            {
+                var response = _service.PromoteStudents(request.Semester, request.Studies);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

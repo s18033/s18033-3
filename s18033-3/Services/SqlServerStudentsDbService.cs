@@ -12,7 +12,7 @@ namespace s18033_3.Services
 {
     public class SqlServerStudentsDbService : ControllerBase, IStudentsDbService
     {
-        public IActionResult EnrollStudent(EnrollStudentRequest request)
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
             using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
             {
@@ -37,7 +37,7 @@ namespace s18033_3.Services
                         {
                             dataReader.Close();
                             transaction.Rollback();
-                            return BadRequest("Indeks studenta powinien byc unikalny.");
+                            throw new Exception("Indeks studenta powinien byc unikalny.");
                         }
 
                         dataReader.Close();
@@ -51,7 +51,7 @@ namespace s18033_3.Services
                         {
                             dataReader.Close();
                             transaction.Rollback();
-                            return BadRequest("Zadane studia nie istnieja.");
+                            throw new Exception("Zadane studia nie istnieją");
                         }
 
                         int idStudy = 0;
@@ -102,7 +102,7 @@ namespace s18033_3.Services
                         response.Semester = 1;
                         response.StartDate = startDate;
 
-                        return Ok(response);
+                        return response;
 
                     }
                     catch (SqlException)
@@ -111,10 +111,10 @@ namespace s18033_3.Services
                     }
                 }
             }
-            return BadRequest("Wystapil problem z polaczeniem sie z baza.");
+            throw new Exception("Wystapił problem z połączeniem sie z bazą.");
         }
 
-        public IActionResult PromoteStudents(int semester, string studies)
+        public EnrollStudentResponse PromoteStudents(int semester, string studies)
         {
             using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
             {
@@ -125,19 +125,22 @@ namespace s18033_3.Services
 
                     try
                     {
-
                         command.Connection = connection;
 
                         command.CommandType = CommandType.StoredProcedure;
                         command.CommandText = "dbo.PromoteStudent";
                         command.Parameters.AddWithValue("@Studies", studies);
                         command.Parameters.AddWithValue("@Semester", semester);
+                        command.Parameters.Add("@retValue", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.ReturnValue;
+                        // Procedura mimo sprawdzenia w SSMS nie jest w stanie się wykonać i zawsze zwraca wyjątek (RAISERROR). 
+                        // Parametry studies i semester są prawidłowe - sprawdzałem. Mimo porady aby dodać linię 134 nadal rozwiązanie nie działa :(
+                        // Do repozytorium dołączony jest plik z procedurą (StoredProcedure.sql)
 
-                        // Procedura mimo sprawdzenia w SSMS nie jest w stanie się zawsze zwraca wyjątek (RAISERROR) i trafia do 404 (NotFound niżej). Parametry studies i semester są prawidłowe - sprawdzałem.
+                        // Dodatkowo nie wiem jak obsłużyć wyjątek procedury - że jest błąd po stronie serwera, jak pobrać wiadomość?
 
                         var dataReader = command.ExecuteReader();
 
-                        var idEnrollmentDb = command.Parameters["@ReturnVal"].Value;
+                        var idEnrollmentDb = (int)command.Parameters["@retValue"].Value;
                         dataReader.Close();
 
                         command.CommandType = CommandType.Text;
@@ -151,18 +154,16 @@ namespace s18033_3.Services
                         int idStudy = dataReader.GetInt32(dataReader.GetOrdinal("IdStudy"));
                         DateTime startDate = dataReader.GetDateTime(dataReader.GetOrdinal("StartDate"));
 
-                        Enrollment response = new Enrollment();
-                        response.IdStudy = idStudy;
+                        var response = new EnrollStudentResponse();
                         response.Semester = semester + 1;
-                        response.IdEnrollment = idEnrollment;
-                        response.StartDate = startDate.ToString();
+                        response.StartDate = startDate;
 
-                        return Ok(response);
+                        return response;
 
                     }
                     catch (SqlException)
                     {
-                        return NotFound("Nie znaleziono studiów o zadanej nazwie");
+                        throw new Exception("Nie wykonano promocji studiów o zadanej nazwie.");
                     }
                 }
             }

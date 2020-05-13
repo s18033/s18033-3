@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using s18033_3.DTOs.Requests;
+using s18033_3.DTOs.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace s18033_3.Services
 {
     public interface IStudentsDbService
     {
-        public IActionResult EnrollStudent(EnrollStudentRequest request)
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public IActionResult PromoteStudents(int semester, string studies)
+        public EnrollStudentResponse PromoteStudents(int semester, string studies)
         {
             throw new NotImplementedException();
         }
