@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -34,7 +35,7 @@ namespace s18033_3.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "student")]
         public IActionResult GetStudents()
         {
             var students = new List<Student>();
@@ -45,6 +46,7 @@ namespace s18033_3.Controllers
                 FirstName = "Piotr",
                 LastName = "Kwiatek",
                 Studies = "IT",
+                Password = "",
                 Birthdate = DateTime.Parse("1/1/1970")
             });
 
@@ -54,15 +56,28 @@ namespace s18033_3.Controllers
         [HttpPost]
         public IActionResult Login(LoginRequestDto request) {
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
+            var student = _service.GetStudent(request.Index);
+
+          //  var requestPassword = new HMACSHA256(Encoding.UTF8.GetBytes(request.Password));
+
+            if (student == null)
+            {
+                return BadRequest();
+            }
+
+            if (!student.Password.Equals(request.Password))
+            {
+                return BadRequest();
+            }
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim(ClaimTypes.Name, "piotr"),
-                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.NameIdentifier, request.Index),
+                new Claim(ClaimTypes.Role, "employee"), // tylko do testów końcówek
                 new Claim(ClaimTypes.Role, "student")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

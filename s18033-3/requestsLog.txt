@@ -116,3 +116,280 @@
 
 
 ===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "1423"
+}
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/enrollments/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "1243"
+}
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===

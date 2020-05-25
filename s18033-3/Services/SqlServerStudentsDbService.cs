@@ -6,12 +6,13 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Cw3.Models;
+using System.Data;
 
 namespace s18033_3.Services
 {
     public class SqlServerStudentsDbService : ControllerBase, IStudentsDbService
     {
-        public IActionResult EnrollStudent(EnrollStudentRequest request)
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
             using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
             {
@@ -36,7 +37,7 @@ namespace s18033_3.Services
                         {
                             dataReader.Close();
                             transaction.Rollback();
-                            return BadRequest("Indeks studenta powinien byc unikalny.");
+                            throw new Exception("Indeks studenta powinien byc unikalny.");
                         }
 
                         dataReader.Close();
@@ -50,7 +51,7 @@ namespace s18033_3.Services
                         {
                             dataReader.Close();
                             transaction.Rollback();
-                            return BadRequest("Zadane studia nie istnieja.");
+                            throw new Exception("Zadane studia nie istnieją");
                         }
 
                         int idStudy = 0;
@@ -101,7 +102,7 @@ namespace s18033_3.Services
                         response.Semester = 1;
                         response.StartDate = startDate;
 
-                        return Ok(response);
+                        return response;
 
                     }
                     catch (SqlException)
@@ -110,12 +111,62 @@ namespace s18033_3.Services
                     }
                 }
             }
-            return BadRequest("Wystapil problem z polaczeniem sie z baza.");
+            throw new Exception("Wystapił problem z połączeniem sie z bazą.");
         }
 
-        public void PromoteStudents(int semester, string studies)
+        public EnrollStudentResponse PromoteStudents(int semester, string studies)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18033;Integrated Security=True"))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+
+                    connection.Open();
+
+                    try
+                    {
+                        command.Connection = connection;
+
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandText = "dbo.PromoteStudent";
+                        command.Parameters.AddWithValue("@Studies", studies);
+                        command.Parameters.AddWithValue("@Semester", semester);
+                        command.Parameters.Add("@retValue", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.ReturnValue;
+                        // Procedura mimo sprawdzenia w SSMS nie jest w stanie się wykonać i zawsze zwraca wyjątek (RAISERROR). 
+                        // Parametry studies i semester są prawidłowe - sprawdzałem. Mimo porady aby dodać linię 134 nadal rozwiązanie nie działa :(
+                        // Do repozytorium dołączony jest plik z procedurą (StoredProcedure.sql)
+
+                        // Dodatkowo nie wiem jak obsłużyć wyjątek procedury - że jest błąd po stronie serwera, jak pobrać wiadomość?
+
+                        var dataReader = command.ExecuteReader();
+
+                        var idEnrollmentDb = (int)command.Parameters["@retValue"].Value;
+                        dataReader.Close();
+
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = "SELECT IdEnrollment, StartDate, IdStudy FROM dbo.Enrollment WHERE IdEnrollment=@IdEnrollment";
+                        command.Parameters.AddWithValue("@IdEnrollment", idEnrollmentDb);
+
+                        dataReader = command.ExecuteReader();
+                        dataReader.Read();
+
+                        int idEnrollment = dataReader.GetInt32(dataReader.GetOrdinal("IdEnrollment"));
+                        int idStudy = dataReader.GetInt32(dataReader.GetOrdinal("IdStudy"));
+                        DateTime startDate = dataReader.GetDateTime(dataReader.GetOrdinal("StartDate"));
+
+                        var response = new EnrollStudentResponse();
+                        response.Semester = semester + 1;
+                        response.StartDate = startDate;
+
+                        return response;
+
+                    }
+                    catch (SqlException)
+                    {
+                        throw new Exception("Nie wykonano promocji studiów o zadanej nazwie.");
+                    }
+                }
+            }
         }
 
         public Boolean IsStudentExists(string indexNumber)
@@ -167,7 +218,7 @@ namespace s18033_3.Services
 
                         command.Connection = connection;
 
-                        command.CommandText = "SELECT FirstName, LastName FROM dbo.Student WHERE IndexNumber=@IndexNumber";
+                        command.CommandText = "SELECT FirstName, LastName, Password FROM dbo.Student WHERE IndexNumber=@IndexNumber";
                         command.Parameters.AddWithValue("IndexNumber", indexNumber);
 
                         var dataReader = command.ExecuteReader();
@@ -183,6 +234,7 @@ namespace s18033_3.Services
                         var student = new Student();
                         student.FirstName = dataReader.GetString(0);
                         student.LastName = dataReader.GetString(1);
+                        student.Password = dataReader.GetString(2);
 
                         return student;
                     }
