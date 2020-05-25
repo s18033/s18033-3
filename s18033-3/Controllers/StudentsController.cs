@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using s18033_3.DTOs;
 using s18033_3.DTOs.Requests;
 using s18033_3.DTOs.Responses;
+using s18033_3.Helpers;
 using s18033_3.Services;
 
 namespace s18033_3.Controllers
@@ -59,14 +60,17 @@ namespace s18033_3.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
             var student = _service.GetStudent(request.Index);
 
-          //  var requestPassword = new HMACSHA256(Encoding.UTF8.GetBytes(request.Password));
+            var requestPassword = PasswordHelper.CreateMD5(request.Password);
 
             if (student == null)
             {
                 return BadRequest();
             }
 
-            if (!student.Password.Equals(request.Password))
+            // Użyłem któregokolwiek algorytmu - wiem że MD5 jest niebezpieczne ale jako że jest to praca domowa, to go użyłem.
+            // W bazie danych hasła to string 123 w formie hasha MD5. Normalnie użyłbym algorytmu wraz z kluczem a dodatkowo trzymałbym wartość soli w bazie danych.
+            // Mam nadzieję że podany przykład udowadnia zrobienie zadania numer 3. Pozdrawiam.
+            if (!student.Password.Equals(requestPassword))
             {
                 return BadRequest();
             }

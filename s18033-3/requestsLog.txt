@@ -393,3 +393,66 @@
 	"Password": "123"
 }
 ===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ POST
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
+===
+/api/students/ GET
+
+{
+	"Index": "s18033",
+	"Password": "123"
+}
+===
