@@ -25,3 +25,94 @@
  "Birthdate": "1970-01-01"
 }
 ===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ GET
+
+{
+ "Studies": "Informatyka",
+ "IndexNumber": "s1212",
+ "FirstName": "Jan",
+ "LastName": "Kowalski",
+ "Birthdate": "1970-01-01"
+}
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
+===
+/weatherforecast GET
+
+
+===
+===
+/favicon.ico GET
+
+
+===
+===
+/api/students/ GET
+
+
+===
